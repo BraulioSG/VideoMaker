@@ -10,7 +10,6 @@ public class Curl extends Interpreter{
      * @param type GET, POST, PUT, DELETE
      * @param URL URL to make the request
      * @param optional optional parameters
-     * @return
      */
     public static String[] sendRequest(RequestType type, String URL, String...optional){
         Vector<String> command = new Vector<>();

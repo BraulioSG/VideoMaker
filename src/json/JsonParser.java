@@ -90,21 +90,25 @@ public class JsonParser {
                 throw new IncorrectJsonFormat("Invalid key format");
             }
 
+            if(isNumber && "0123456789.-".indexOf(character) == -1 ) {
+                currentValue = parseNumber(String.copyValueOf(txt.toCharArray(), startingNumber, idx - startingNumber));
+                isNumber = false;
+                startingNumber = 0;
+            }
+
             if(character == ',' && !scanningKey ){
                 if(openQuotes || !openBraces.empty()) continue;
                 scanningKey = true;
-                if(currentKey == null || currentValue == null) throw new IncorrectJsonFormat();
+                if(currentKey == null || currentValue == null) throw new IncorrectJsonFormat("error at scanning key");
                 dict.add(currentKey, currentValue);
-
                 currentKey = null;
                 currentValue = null;
+                continue;
             }
 
             //if(!scanningKey && currentValue != null) throw new IncorrectJsonFormat("wrong value format");
 
-            if(isNumber && "0123456789.-".indexOf(character) == -1 ) {
-                currentValue = parseNumber(String.copyValueOf(txt.toCharArray(), startingNumber, idx - startingNumber));
-            }
+
 
             if(openQuotes) continue;
             if(character == '{' || character == '['){
@@ -135,12 +139,14 @@ public class JsonParser {
                 if(String.copyValueOf(txt.toCharArray(), idx, 4).equals("true")){
                     idx += 3;
                     currentValue = new JsonBoolean(true);
+                    continue;
                 }
-                else if(String.copyValueOf(txt.toCharArray(), idx, 5).equals("false")){
+                if(String.copyValueOf(txt.toCharArray(), idx, 5).equals("false")){
                     idx += 4;
                     currentValue = new JsonBoolean(false);
+                    continue;
                 }
-                else throw new IncorrectJsonFormat("not valid value at boolean");
+                throw new IncorrectJsonFormat("not valid value at boolean");
             }catch(IndexOutOfBoundsException e){
                 throw new IncorrectJsonFormat("not valid value");
             }

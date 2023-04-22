@@ -1,6 +1,8 @@
 package api;
 
-public class ApiConnection {
+import json.JsonObject;
+
+public abstract class ApiConnection {
     private String API_KEY;
     private String API_URL;
 
@@ -9,6 +11,7 @@ public class ApiConnection {
         setAPI_URL(url);
     }
 
+    public abstract JsonObject sendRequest(String... params);
     //GETTERS & SETTERS
     private void setAPI_KEY(String key){
         this.API_KEY = key;

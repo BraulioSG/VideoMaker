@@ -1,11 +1,21 @@
 package utils;
 
+import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
 public class Date {
     private int year, month, day, hour, minute, second;
     private String utc;
 
     public Date(){
-        this(0,0,0,0,0,0,"0");
+        setYear(0);
+        setMonth(0);
+        setDay(0);
+        setHour(0);
+        setMinute(0);
+        setSecond(0);
+        setUTC("0");
     }
 
     public Date(int year, int month, int day, int hour, int minute, int second, String utc){
@@ -19,7 +29,45 @@ public class Date {
     }
 
     public Date(String exifMetadata){
+        if(exifMetadata.length() < 19 || exifMetadata.length() > 25){
+            if (exifMetadata.length() < 19) throw  new RuntimeException(String.format("%s cannot be parsed into date", exifMetadata));
+            exifMetadata = String.copyValueOf(exifMetadata.toCharArray(), 0, 19);
+        }
+        String utc = "-0:00";
+        if(exifMetadata.length() > 19){
+            utc = String.copyValueOf(exifMetadata.toCharArray(),19, 6);
+            exifMetadata = String.copyValueOf(exifMetadata.toCharArray(), 0, 19);
+        }
 
+        setUTC(utc);
+
+        String[] tokens = exifMetadata.split(" ");
+        if(tokens.length != 2) throw new RuntimeException(String.format("%s cannot be parsed into date", exifMetadata));
+        String dateString = tokens[0];
+        String timeString = tokens[1];
+
+        if(!Pattern.matches("[0-9]{4}:[0-9]{2}:[0-9]{2}", dateString)) throw new RuntimeException(String.format("%s cannot be parsed into date", exifMetadata));
+        if(!Pattern.matches("[0-9]{2}:[0-9]{2}:[0-9]{2}", timeString)) throw new RuntimeException(String.format("%s cannot be parsed into date", exifMetadata));
+
+        int[] dateValues = Arrays.stream(dateString.split(":")).mapToInt(Integer::parseInt).toArray();
+        int[] timeValues = Arrays.stream(timeString.split(":")).mapToInt(Integer::parseInt).toArray();
+
+        setYear(dateValues[0]);
+        setMonth(dateValues[1]);
+        setDay(dateValues[2]);
+        setHour(timeValues[0]);
+        setMinute(timeValues[1]);
+        setSecond(timeValues[2]);
+
+    }
+
+    public boolean isOlderThan(Date date2){
+        if(getYear() != date2.getYear()) return getYear() < date2.getYear();
+        if(getMonth() != date2.getMonth()) return  getMonth() < date2.getMonth();
+        if(getDay() != date2.getDay()) return  getDay() < date2.getDay();
+        if(getHour() != date2.getHour()) return getHour() < date2.getHour();
+        if(getMinute() != date2.getMinute()) return  getMinute() < date2.getMinute();
+        return getSecond() < date2.getSecond();
     }
 
     //GETTERS AND SETTERS

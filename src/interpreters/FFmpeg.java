@@ -24,17 +24,74 @@ public class FFmpeg extends Interpreter{
         return String.format("\"%s\"", executable.getAbsolutePath());
     }
 
-    public static void convertImageToVideo(File image){
+    /**
+     * Converts an image into a video using ffmpeg
+     * @param image image to convert
+     * @param destination destination file
+     */
+    public static void convertImageToVideo(File image, String destination){
         String filePath  = String.format("\"%s\"", image.getAbsolutePath());
-        String dest = String.format("\"%s\"", image.getParentFile().getAbsolutePath().replace("\\", "/") + "/output.mp4");
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-framerate", "1", "-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-r", "30", dest, "-y");
-        System.out.println(getExecutable());
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-framerate", "0.2", "-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-r", "30", destination, "-y");
+        //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
         for(String line: commandResponse){
             System.out.println(line);
         }
-        System.out.println("done");
+        //System.out.println("done");
 
+    }
+
+    /**
+     * Converts video to mp4
+     * @param file file to convert
+     * @param destination destination
+     */
+    public static void convertToMp4(File file, String destination){
+        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-codec", "copy", destination, "-y");
+        //System.out.println(getExecutable());
+        //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
+        for(String line: commandResponse){
+            System.out.println(line);
+        }
+        //System.out.println("done");
+    }
+
+    /**
+     * Given a directory this will concat all the videos in one single video
+     * @param list text file with the files listed
+     */
+    public static void concatVideos(String list, String destination){
+
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-f", "concat", "-i", list, "-c", "copy", destination, "-y");
+        //System.out.println(getExecutable());
+        //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
+        for(String line: commandResponse){
+            System.out.println(line);
+        }
+        //System.out.println("done");
+    }
+
+    public static void cropVideo(File file, int width, int height, String destination){
+        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-filter:v",String.format("\"crop=%d:%d:0:0\"", width, height), destination, "-y");
+        //System.out.println(getExecutable());
+        //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
+        for(String line: commandResponse){
+            System.out.println(line);
+        }
+        //System.out.println("done");
+    }
+
+    public static void burnSubtitles(File file, String subtitles, String destination){
+        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-vf", String.format("subtitles=%s", subtitles),destination, "-y");
+        //System.out.println(getExecutable());
+        //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
+        for(String line: commandResponse){
+            System.out.println(line);
+        }
+        //System.out.println("done");
     }
 
 
