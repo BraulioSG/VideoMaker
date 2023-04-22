@@ -19,6 +19,7 @@ public abstract class JsonObject{
     public abstract JsonObject get(String key);
     public abstract JsonObject get(int index);
 
+
     @Override
     public String toString(){
         return this.stringify();

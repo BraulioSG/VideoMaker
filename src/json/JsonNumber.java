@@ -18,7 +18,7 @@ public class JsonNumber extends JsonObject implements Parseable<Float>{
     public JsonNumber(String val) throws IncorrectJsonFormat {
         setDataType(JsonDataType.Number);
         try{
-            setValue(Float.parseFloat(val));
+            setValue(Float.parseFloat(val.trim()));
         }catch (NumberFormatException intException){
             String errorMessage = String.format("Error: %s cannot be parsed into a JSON Number", val);
             throw new IncorrectJsonFormat(errorMessage);
