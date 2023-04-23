@@ -18,7 +18,7 @@ public class OpenWeather extends ApiConnection{
      * @return
      */
     public JsonObject sendRequest(String... params) {
-        if(true) return  Mock();
+        if(false) return  Mock();
         StringBuilder url = new StringBuilder();
         url.append(getAPI_URL());
         url.append(String.format("?lat=%s&lon=%s&appid=",params[0], params[1]));

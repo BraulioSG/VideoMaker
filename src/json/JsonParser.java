@@ -24,6 +24,7 @@ public class JsonParser {
      * @throws IncorrectJsonFormat if the format is wrong
      */
     private static JsonDictionary parseDictionary(String txt) throws IncorrectJsonFormat{
+
         if(!txt.startsWith("{")||  !txt.endsWith("}")) {
             if(!txt.endsWith("}"))
                 throw new IncorrectJsonFormat("The %s string cannot be converted missing closing brace '} ");
@@ -44,13 +45,15 @@ public class JsonParser {
         JsonObject currentValue = null;
 
         char lastChar = ' ';
-
+        System.out.println(txt);
         for(int idx = 1; idx < txt.length() - 1; idx++){
+
             char character = txt.charAt(idx);
 
             //skip the white spaces
             if(character == ' ' && idx < txt.length() - 2) continue;
 
+            if(scanningKey) System.out.print(character);
             lastChar = character;
 
             //skip the scape character and the followed one
@@ -78,7 +81,9 @@ public class JsonParser {
             }
 
             if (character == ':' ) {
+                System.out.println("colon");
                 if(openQuotes || !openBraces.empty()) continue;
+                System.out.println("not skiped");
                 if (scanningKey) {
                     scanningKey = false;
                     continue;
@@ -97,6 +102,7 @@ public class JsonParser {
             }
 
             if(character == ',' && !scanningKey ){
+
                 if(openQuotes || !openBraces.empty()) continue;
                 scanningKey = true;
                 if(currentKey == null || currentValue == null) throw new IncorrectJsonFormat("error at scanning key");
@@ -112,12 +118,19 @@ public class JsonParser {
 
             if(openQuotes) continue;
             if(character == '{' || character == '['){
+                if(openQuotes || !openBraces.empty()) continue;
+                System.out.print(character);
                 openBraces.add(idx);
             }
             if(character == '}' || character == ']'){
+                if(openQuotes || !openBraces.empty()) continue;
+                System.out.print(character);
                 if(openBraces.empty()) throw new IncorrectJsonFormat(String.format("missing symbol for %c ", character));
                 int braceIdx = openBraces.pop();
-                if((character == ']' && txt.charAt(braceIdx) == '{') || (character == '}' && txt.charAt(braceIdx) == '[')) throw  new IncorrectJsonFormat("opening and close symbols are not compatible");
+                if((character == ']' && txt.charAt(braceIdx) == '{') || (character == '}' && txt.charAt(braceIdx) == '[')){
+                    System.out.println(String.format("error at -> %s%s%s", txt.charAt(idx-1), character, txt.charAt(idx+1)));
+                    throw  new IncorrectJsonFormat("opening and close symbols are not compatible");
+                }
 
                 if(openBraces.empty()){
                     String braceContent = String.copyValueOf(txt.toCharArray(), braceIdx,idx + 1 - braceIdx);

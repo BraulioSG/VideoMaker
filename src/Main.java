@@ -1,12 +1,26 @@
+import api.ApiConnection;
+import api.Unsplash;
+import json.JsonNumber;
 import json.JsonObject;
 import json.JsonParser;
 
 public class Main {
     public static void main(String[] args) {
         //TestJsonParser();
-        TestVideoMaker();
+        //TestVideoMaker();
+        testUnsplash();
     }
 
+    public  static void testUnsplash(){
+        ApiConnection unsplash = new Unsplash();
+        JsonObject unsplashResponse = unsplash.sendRequest("vide");
+        System.out.println(unsplashResponse);
+        if(unsplashResponse.get("errors") != null) return;
+        if(((JsonNumber) unsplashResponse.get("total")).getInt() == 0) unsplashResponse = unsplash.sendRequest("videomaker");
+        System.out.println(unsplashResponse);
+        //System.out.println(unsplashResponse.get("results").get(0).get("urls").get("regular"));
+
+    }
     public static void TestVideoMaker(){
         VideoMaker vm = new VideoMaker();
         vm.init();
