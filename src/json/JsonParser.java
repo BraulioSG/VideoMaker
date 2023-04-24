@@ -24,7 +24,6 @@ public class JsonParser {
      * @throws IncorrectJsonFormat if the format is wrong
      */
     private static JsonDictionary parseDictionary(String txt) throws IncorrectJsonFormat{
-
         if(!txt.startsWith("{")||  !txt.endsWith("}")) {
             if(!txt.endsWith("}"))
                 throw new IncorrectJsonFormat("The %s string cannot be converted missing closing brace '} ");
@@ -33,6 +32,7 @@ public class JsonParser {
         }
         JsonDictionary dict = new JsonDictionary();
 
+        System.out.println(txt);
         //Scanning
         boolean scanningKey = true;
         boolean openQuotes = false;
@@ -49,7 +49,6 @@ public class JsonParser {
         for(int idx = 1; idx < txt.length() - 1; idx++){
 
             char character = txt.charAt(idx);
-
             //skip the white spaces
             if(character == ' ' && idx < txt.length() - 2) continue;
 
@@ -118,12 +117,11 @@ public class JsonParser {
 
             if(openQuotes) continue;
             if(character == '{' || character == '['){
-                if(openQuotes || !openBraces.empty()) continue;
-                System.out.print(character);
+                if(openQuotes) continue;
                 openBraces.add(idx);
             }
             if(character == '}' || character == ']'){
-                if(openQuotes || !openBraces.empty()) continue;
+                if(openQuotes) continue;
                 System.out.print(character);
                 if(openBraces.empty()) throw new IncorrectJsonFormat(String.format("missing symbol for %c ", character));
                 int braceIdx = openBraces.pop();
@@ -194,6 +192,7 @@ public class JsonParser {
             else
                 throw new IncorrectJsonFormat(String.format("The %s string cannot be converted missing opening bracket '[' ", txt));
         }
+        System.out.println(txt);
         JsonArray arr = new JsonArray();
         JsonObject currentElement = null;
 
@@ -249,11 +248,13 @@ public class JsonParser {
 
 
 
-            if(openQuotes) continue;
+
             if(character == '{' || character == '['){
+                if(openQuotes) continue;
                 openBraces.add(idx);
             }
             if(character == '}' || character == ']'){
+                if(openQuotes) continue;
                 if(openBraces.empty()) throw new IncorrectJsonFormat(String.format("missing symbol for %c ", character));
                 int braceIdx = openBraces.pop();
                 if((character == ']' && txt.charAt(braceIdx) == '{') || (character == '}' && txt.charAt(braceIdx) == '[')) throw  new IncorrectJsonFormat("opening and close symbols are not compatible");
@@ -267,6 +268,7 @@ public class JsonParser {
 
 
             }
+            if(openQuotes) continue;
             if(!openBraces.empty()) continue;
 
             if("0123456789.-".indexOf(character) != -1) {

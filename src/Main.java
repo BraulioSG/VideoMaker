@@ -17,6 +17,7 @@ public class Main {
         //testUnsplash();
         //testExif();
         //testFFmpeg();
+        //TestJsonParser2();
     }
 
     public static void testFFmpeg(){
@@ -47,6 +48,11 @@ public class Main {
         VideoMaker vm = new VideoMaker();
         vm.init();
 
+    }
+
+    public static void TestJsonParser2(){
+        JsonObject json = JsonParser.parse("{\"simpleKey\":[1,2,3,4,5,6,7,8,9,0]}");
+        System.out.println(json);
     }
 
     public static void TestJsonParser(){
