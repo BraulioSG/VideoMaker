@@ -4,7 +4,6 @@ import java.io.File;
 
 public class FFmpeg extends Interpreter{
 
-    private static Thread t;
     /**
      * Returns the executable command depending on the operating system
      * @return
@@ -15,13 +14,16 @@ public class FFmpeg extends Interpreter{
         if(os == OperatingSystem.Windows){
             pathBuilder.append(WINDOWS_TOOLS_PATH);
             pathBuilder.append("/ffmpeg/bin/ffmpeg.exe");
+            File executable = new File(pathBuilder.toString());
+            return String.format("\"%s\"", executable.getAbsolutePath());
         }else{
             pathBuilder.append(UNIX_TOOLS_PATH);
             pathBuilder.append("/ffmpeg");
+            File executable = new File(pathBuilder.toString());
+            return "ffmpeg";
         }
 
-        File executable = new File(pathBuilder.toString());
-        return String.format("\"%s\"", executable.getAbsolutePath());
+
     }
 
     /**
@@ -30,14 +32,15 @@ public class FFmpeg extends Interpreter{
      * @param destination destination file
      */
     public static void convertImageToVideo(File image, String destination){
-        String filePath  = String.format("\"%s\"", image.getAbsolutePath());
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-framerate", "0.2", "-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-r", "30", destination, "-y");
+        String filePath  = String.format("%s", image.getPath());
+        //System.out.println(getExecutable());
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v", "error", "-loop", "1","-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-t", "5", "-pix_fmt", "yuv420p", "-sn", destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
         for(String line: commandResponse){
             System.out.println(line);
         }
-        //System.out.println("done");
+        System.out.println("done");
 
     }
 

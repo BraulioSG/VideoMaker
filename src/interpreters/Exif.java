@@ -46,12 +46,13 @@ public class Exif extends Interpreter{
         if(os == OperatingSystem.Windows){
             pathBuilder.append(WINDOWS_TOOLS_PATH);
             pathBuilder.append("/exiftool/exiftool.exe");
+            File executable = new File(pathBuilder.toString());
+            return String.format("\"%s\"", executable.getAbsolutePath());
         }else{
             pathBuilder.append(UNIX_TOOLS_PATH);
-            pathBuilder.append("/exiftool");
+            pathBuilder.append("/exiftool/exiftool");
+            File executable = new File(pathBuilder.toString());
+            return String.format("%s", executable.getAbsolutePath());
         }
-
-        File executable = new File(pathBuilder.toString());
-        return String.format("\"%s\"", executable.getAbsolutePath());
     }
 }
