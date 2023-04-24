@@ -45,7 +45,7 @@ public class JsonParser {
         JsonObject currentValue = null;
 
         char lastChar = ' ';
-        System.out.println(txt);
+        //System.out.println(txt);
         for(int idx = 1; idx < txt.length() - 1; idx++){
 
             char character = txt.charAt(idx);
@@ -81,9 +81,9 @@ public class JsonParser {
             }
 
             if (character == ':' ) {
-                System.out.println("colon");
+                //System.out.println("colon");
                 if(openQuotes || !openBraces.empty()) continue;
-                System.out.println("not skiped");
+                //System.out.println("not skiped");
                 if (scanningKey) {
                     scanningKey = false;
                     continue;

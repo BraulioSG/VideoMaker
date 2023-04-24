@@ -1,14 +1,36 @@
 import api.ApiConnection;
 import api.Unsplash;
+import interpreters.Exif;
+import interpreters.FFmpeg;
+import interpreters.Terminal;
 import json.JsonNumber;
 import json.JsonObject;
 import json.JsonParser;
 
+import java.io.File;
+import java.util.HashMap;
+
 public class Main {
     public static void main(String[] args) {
         //TestJsonParser();
-        //TestVideoMaker();
-        testUnsplash();
+        TestVideoMaker();
+        //testUnsplash();
+        //testExif();
+        //testFFmpeg();
+    }
+
+    public static void testFFmpeg(){
+        /*
+        for(int i = 5; i < 10; i++){
+            Terminal.execute("ffmpeg", "-loop", "1", "-i", "./samples/imagen" + i + ".jpg", "-c:v", "libx264", "-t", "8", "-pix_fmt", "yuv420p", "-sn", "./temp/vid-" + i + ".mp4", "-y");
+        }
+        */
+        FFmpeg.convertImageToVideo(new File("./samples/imagen5.jpg"), "./samples/output.mp4");
+    }
+
+    public static void testExif(){
+        HashMap<String, String> metadata = Exif.getFileInformation("./samples/imagen5.jpg");
+        System.out.println(metadata);
     }
 
     public  static void testUnsplash(){
