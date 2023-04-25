@@ -2,37 +2,36 @@ package api;
 
 import interpreters.Curl;
 import interpreters.RequestType;
+import json.JsonDictionary;
 import json.JsonObject;
 import json.JsonParser;
+import system.FileManager;
 
 public class MapQuest extends ApiConnection{
 
     public MapQuest(){
-        super("2PLA6xboMKL7QLY2ZxiCB3qccvqwduRu", "https://www.mapquestapi.com/geocoding/v1/reverse");
+        super("2PLA6xboMKL7QLY2ZxiCB3qccvqwduRu", "https://www.mapquestapi.com/staticmap/v5/map");
     }
     @Override
     public JsonObject sendRequest(String... params) {
         if(false) return  Mock();
-        String lat = params[0];
-        String lon = params[1];
+        String lat1 = params[0];
+        String lon1 = params[1];
+        String lat2 = params[2];
+        String lon2 = params[3];
         StringBuilder url = new StringBuilder();
         url.append(String.format("%s?key=%s", getAPI_URL(), getAPI_KEY()));
-        url.append("&location=");
-        url.append(lat);
-        url.append("%2C");
-        url.append(lon);
-        url.append("&outFormat=json");
-        url.append("&thumbMaps=true");
+        url.append("&locations=");
+        url.append(String.format("%s,%s||%s,%s|", lat1, lon1,lat2,lon2));
+        url.append("marker-red-sm&size=1080,1920&defaultMarker=marker-sm-22407F-3B5998&size=1080,1920@2x");
 
-        String[] responseArr = Curl.sendRequest(RequestType.GET, url.toString());
-        StringBuilder responseSB = new StringBuilder();
-        for(String line : responseArr){
-            responseSB.append(line);
-        }
+        FileManager.createDirectory("./temp/map");
+        Curl.sendRequest(RequestType.GET, String.format("\"%s\"",url), "--output", "./temp/map/map.png");
 
         //System.out.println(responseSB);
-
-        return JsonParser.parse(responseSB.toString());
+        JsonDictionary dic = new JsonDictionary();
+        dic.add("status", "complete");
+        return dic;
     }
 
     public JsonObject Mock(){

@@ -2,10 +2,13 @@ package api;
 
 import interpreters.Curl;
 import interpreters.RequestType;
+import json.JsonDictionary;
 import json.JsonObject;
 import json.JsonParser;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class OpenWeather extends ApiConnection{
     public OpenWeather(){
@@ -31,8 +34,17 @@ public class OpenWeather extends ApiConnection{
         }
 
         //System.out.println(responseSB);
+        Pattern pattern = Pattern.compile("\"description\":\"([^\"]+)\"");
+        Matcher matcher = pattern.matcher(responseSB.toString());
+        JsonDictionary dic = new JsonDictionary();
 
-        return JsonParser.parse(responseSB.toString());
+        if(matcher.find()){
+            dic.add("description", matcher.group(1));
+        }else{
+            dic.add("description", "weather not found");
+        }
+
+        return dic;
     }
 
     private JsonObject Mock(){

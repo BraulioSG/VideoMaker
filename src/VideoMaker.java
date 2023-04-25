@@ -1,7 +1,4 @@
-import api.API;
-import api.ApiConnection;
-import api.MapQuest;
-import api.OpenWeather;
+import api.*;
 import interpreters.Exif;
 import interpreters.FFmpeg;
 import json.JsonObject;
@@ -9,6 +6,7 @@ import json.JsonString;
 import system.FileManager;
 import system.FileType;
 import system.MediaFile;
+import utils.Location;
 import utils.ProgressBar;
 
 import java.io.File;
@@ -136,6 +134,14 @@ public class VideoMaker {
         FileManager.createDirectory("./temp/subbed");
 
         OpenWeather openWeather = new OpenWeather();
+        Unsplash unsplash = new Unsplash();
+        NinjaApi ninjaApi = new NinjaApi();
+        MapQuest mapQuest = new MapQuest();
+
+
+
+
+
         int counter = 1;
         try {
             File list = new File("./temp/subbed/videoList.txt");
@@ -143,17 +149,35 @@ public class VideoMaker {
             if(!list.createNewFile()) throw new RuntimeException("Error trying to create the video list");
             StringBuilder content = new StringBuilder();
 
+            //Cover
+            unsplash.downloadImage("a");
+            FFmpeg.convertImageToVideo("./temp/cover/image.jpg", "./temp./cover/video.mp4");
+            createSrt("./temp/cover/subs.srt", ninjaApi.getJoke());
+            FFmpeg.burnSubtitles("./temp/cover/video.mp4", "./temp/cover/subs.srt", "./temp/subbed/video-0-sub.mp4");
+            content.append("file video-0-sub.mp4\n");
+
+            Location firstLocation = null;
+            Location lastLocation = null;
+
             for(MediaFile file: mediaFiles){
                 String outputVideoPath = "./temp/sorted/video-" + counter + "-sorted.mp4";
                 String inputVideoPath = file.getPath().replace("\\", "/");
                 System.out.println(String.format("%s : %s", inputVideoPath, outputVideoPath));
-                createSrt(String.format("./temp/subtitles/subs-%d-org.srt", counter), String.format("File no° %d", counter));
+
+                if(file.getLocation().getLatitude() != 0 && file.getLocation().getLongitude() != 0){
+                    if(firstLocation == null) firstLocation = file.getLocation();
+                    lastLocation = file.getLocation();
+                }
+
+
+
 
                 String latitude = Double.toString(file.getLocation().getLatitude());
                 String longitude = Double.toString(file.getLocation().getLongitude());
                 JsonObject weatherRes = openWeather.sendRequest(latitude, longitude);
 
-                System.out.println(weatherRes);
+                JsonString weather = (JsonString) weatherRes.get("description");
+                createSrt(String.format("./temp/subtitles/subs-%d-org.srt", counter), weather.getValue());
 
 
                 if(file.getType() == FileType.Image){
@@ -169,6 +193,18 @@ public class VideoMaker {
 
                 counter++;
             }
+
+            if(lastLocation == null) lastLocation = new Location();
+            if(firstLocation == null) firstLocation = new Location();
+
+            String firstLat = Double.toString(firstLocation.getLatitude());
+            String firstLon = Double.toString(firstLocation.getLongitude());
+            String lastLat = Double.toString(lastLocation.getLatitude());
+            String lastLon = Double.toString(lastLocation.getLongitude());
+
+            mapQuest.sendRequest(firstLat, firstLon, lastLat, lastLon);
+            FFmpeg.convertImageToVideo("./temp/map/map.png", String.format("./temp/subbed/video-%d-sub.mp4", counter));
+            content.append(String.format("file video-%d-sub.mp4\n", counter));
 
             FileWriter writer = new FileWriter("./temp/subbed/videoList.txt");
             writer.write(content.toString());

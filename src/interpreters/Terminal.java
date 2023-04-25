@@ -17,7 +17,7 @@ public class Terminal {
         for(String cmd: command){
             System.out.print(cmd + " ");
         }*/
-        System.out.println();
+        //System.out.println();
 
         try{
             Process process = processBuilder.command(command).start();

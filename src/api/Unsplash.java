@@ -23,7 +23,7 @@ public class Unsplash extends ApiConnection{
     public JsonObject sendRequest(String... params){
         return new JsonDictionary();
     }
-    public void  createCover(String... params) {
+    public void  downloadImage(String... params) {
 
         StringBuilder url = new StringBuilder();
         url.append(getAPI_URL());
@@ -48,28 +48,6 @@ public class Unsplash extends ApiConnection{
 
             FileManager.createDirectory("./temp/cover");
             Curl.sendRequest(RequestType.GET, imageLink, "--output", "./temp/cover/image.jpg");
-
-
-            try{
-                File list = new File("./temp/cover/cover.srt");
-
-                if(!list.createNewFile()) throw new RuntimeException("Error trying to create the video list");
-                FileWriter writer = new FileWriter("./temp/cover/cover.srt");
-                StringBuilder content = new StringBuilder();
-                content.append("1\n");
-                content.append("00:00:00,000 --> 01:00:00,000\n");
-                NinjaApi ninjaApi = new NinjaApi();
-                content.append(ninjaApi.getJoke());
-
-                writer.write(content.toString());
-                writer.close();
-
-                //FFmpeg.convertImageToVideo(new File("./temp/cover/image.jpg"), "./temp/cover/vid-0.mp4");
-                //FFmpeg.burnSubtitles(new File("./temp/cover/vid-0.mp4"), "./temp/cover/cover.srt", "./temp/finalVideos/vid-0.mp4");
-            }catch (IOException ioe){
-                System.out.println(ioe);
-            }
-
             System.out.println("\n");
         }
 

@@ -1,4 +1,5 @@
 import api.ApiConnection;
+import api.MapQuest;
 import api.NinjaApi;
 import api.Unsplash;
 import interpreters.Exif;
@@ -20,6 +21,12 @@ public class Main {
         //testExif();
         //testFFmpeg();
         //TestJsonParser2();
+        //MapQuest();
+    }
+
+    public  static  void MapQuest(){
+        MapQuest mapQuest = new MapQuest();
+        mapQuest.sendRequest("20.6688", "-103.39919","20.6688", "-100.39919");
     }
 
     public static void testFFmpeg(){
@@ -47,7 +54,7 @@ public class Main {
 
     public  static void testUnsplash(){
         Unsplash unsplash = new Unsplash();
-        unsplash.createCover("m");
+        unsplash.downloadImage("m");
         //JsonObject unsplashResponse = unsplash.do("vide");
         //System.out.println(unsplash.sendRequest("a"));
         //System.out.println(unsplashResponse);
