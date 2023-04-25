@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class NinjaApi extends ApiConnection{
     public NinjaApi(){
-        super("ki5C86yUlMLYb1kq76Vivw==5CpRQHQLKdvUGvqY", "https://api.api-ninjas.com/v1/dadjokes?limit=1");
+        super("cO0ealnQdl9JL2RYwoix0UFlKin0KnEP8EFexmUk", "https://api.api-ninjas.com/v1/dadjokes?limit=1");
     }
     @Override
     public JsonObject sendRequest(String... params){
@@ -26,7 +26,7 @@ public class NinjaApi extends ApiConnection{
         System.out.println(responseSB);
         String res = responseSB.toString();
 
-        if (!res.startsWith("[{\"joke\": ")) return "";
+        if (!res.startsWith("[{\"joke\": ")) return "Missing API Key";
         return String.copyValueOf(res.toCharArray(), 11, res.length() - 14);
     }
 }

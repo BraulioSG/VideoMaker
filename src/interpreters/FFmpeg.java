@@ -77,7 +77,7 @@ public class FFmpeg extends Interpreter{
 
     public static void cropVideo(File file, int width, int height, String destination){
         String filePath  = String.format("%s", file.getAbsolutePath());
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-filter:v",String.format("\"crop=%d:%d:0:0\"", width, height), destination, "-y");
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-filter:v",String.format("crop=%d:%d", width, height), destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
         for(String line: commandResponse){
