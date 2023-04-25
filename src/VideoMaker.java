@@ -107,7 +107,7 @@ public class VideoMaker {
 
         //if(true) return;
         System.out.println("Extracting metadata from files ...");
-        File[] fileList = FileManager.extractFilesByExtensions(sourcePath, ".jpg", ".png", ".heic", ".mp4", ".mkv", ".mov");
+        File[] fileList = FileManager.extractFilesByExtensions(sourcePath, ".jpg", ".png", ".heic", ".mp4", ".mkv", ".mov", ".MOV", ".JPG", ".jpeg", ".JPEG", ".PNG", ".HEIC", ".HEIF", ".MP4", ".MKV");
         if(fileList == null) throw new Exception("Source has not valid media files");
 
         //transforms the files into media files

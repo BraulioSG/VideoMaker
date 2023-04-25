@@ -18,24 +18,24 @@ public class MediaFile extends File {
 
         if(!exists()) throw  new RuntimeException("File does not exists");
 
-        for(String ext : new String[]{".png", ".jpg", ".heic"}) {
+        for(String ext : new String[]{".png", ".jpg", ".jpeg", ".heic", ".heif", ".PNG", ".JPG", ".JPEG", ".HEIC", ".HEIF"}) {
             if (!getName().endsWith(ext)) continue;
             setType(FileType.Image);
         }
         if(getType() == null){
-            for(String ext : new String[]{".mov", ".mp4", ".mkv"}) {
+            for(String ext : new String[]{".mov", ".mp4", ".mkv", ".MOV", ".MP4", ".MKV"}) {
                 if (!getName().endsWith(ext)) continue;
                 setType(FileType.Video);
             }
         }
         if(getType() == null) throw  new RuntimeException("File is cannot be a media File");
-
         setDateAndLocation();
     }
 
     private void setDateAndLocation(){
         HashMap<String, String> metadata = Exif.getFileInformation(getPath(), "File Creation Date/Time", "Create Date", "GPS Longitude", "GPS Latitude");
         //HashMap<String, String> metadata = Exif.getFileInformation(getPath());
+        System.out.println(metadata);
         String dateString = metadata.get("Create Date");
         if(dateString == null) dateString = metadata.get("File Creation Date/Time");
         if(dateString == null) setDate(new Date());
