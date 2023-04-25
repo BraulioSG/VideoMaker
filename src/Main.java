@@ -1,4 +1,5 @@
 import api.ApiConnection;
+import api.NinjaApi;
 import api.Unsplash;
 import interpreters.Exif;
 import interpreters.FFmpeg;
@@ -13,8 +14,9 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
         //TestJsonParser();
-        TestVideoMaker();
-        //testUnsplash();
+        //TestVideoMaker();
+        testUnsplash();
+        //TestNinjaApi();
         //testExif();
         //testFFmpeg();
         //TestJsonParser2();
@@ -34,13 +36,21 @@ public class Main {
         System.out.println(metadata);
     }
 
+    public static void TestNinjaApi(){
+        NinjaApi ninja = new NinjaApi();
+        String res = ninja.getJoke();
+        System.out.println(res);
+    }
+
     public  static void testUnsplash(){
-        ApiConnection unsplash = new Unsplash();
-        JsonObject unsplashResponse = unsplash.sendRequest("vide");
-        System.out.println(unsplashResponse);
-        if(unsplashResponse.get("errors") != null) return;
-        if(((JsonNumber) unsplashResponse.get("total")).getInt() == 0) unsplashResponse = unsplash.sendRequest("videomaker");
-        System.out.println(unsplashResponse);
+        Unsplash unsplash = new Unsplash();
+        unsplash.createCover("m");
+        //JsonObject unsplashResponse = unsplash.do("vide");
+        //System.out.println(unsplash.sendRequest("a"));
+        //System.out.println(unsplashResponse);
+        //if(unsplashResponse.get("errors") != null) return;
+        //if(((JsonNumber) unsplashResponse.get("total")).getInt() == 0) unsplashResponse = unsplash.sendRequest("videomaker");
+        //System.out.println(unsplashResponse);
         //System.out.println(unsplashResponse.get("results").get(0).get("urls").get("regular"));
 
     }

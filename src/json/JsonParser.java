@@ -31,8 +31,6 @@ public class JsonParser {
                 throw new IncorrectJsonFormat("The %s string cannot be converted missing opening brace '{' ");
         }
         JsonDictionary dict = new JsonDictionary();
-
-        //System.out.println(txt);
         //Scanning
         boolean scanningKey = true;
         boolean openQuotes = false;
