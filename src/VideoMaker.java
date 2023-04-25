@@ -90,6 +90,22 @@ public class VideoMaker {
 
     }
 
+    public boolean createSrt(String path, String txt){
+        try {
+            FileWriter writer = new FileWriter(path);
+            StringBuilder content = new StringBuilder();
+            content.append("1\n");
+            content.append("00:00:00,000 --> 01:00:00,000\n");
+            content.append(txt);
+
+            writer.write(content.toString());
+            writer.close();
+        }catch (IOException ioe){
+            return false;
+        }
+        return  true;
+    }
+
     private void createNewVideo(String sourcePath, String outputPath) throws Exception {
         setUpNewProject(sourcePath, outputPath);
         contentFiles = new Vector<>();
@@ -115,6 +131,49 @@ public class VideoMaker {
             }
         }
 
+        FileManager.createDirectory("./temp/sorted");
+        FileManager.createDirectory("./temp/subtitles");
+        FileManager.createDirectory("./temp/subbed");
+
+        int counter = 1;
+        try {
+            File list = new File("./temp/subbed/videoList.txt");
+
+            if(!list.createNewFile()) throw new RuntimeException("Error trying to create the video list");
+            StringBuilder content = new StringBuilder();
+
+            for(MediaFile file: mediaFiles){
+                String outputVideoPath = "./temp/sorted/video-" + counter + "-sorted.mp4";
+                String inputVideoPath = file.getPath().replace("\\", "/");
+                System.out.println(String.format("%s : %s", inputVideoPath, outputVideoPath));
+                createSrt(String.format("./temp/subtitles/subs-%d-org.srt", counter), String.format("File no° %d", counter));
+
+                if(file.getType() == FileType.Image){
+                    FFmpeg.convertImageToVideo(inputVideoPath, outputVideoPath);
+                    FFmpeg.burnSubtitles(outputVideoPath, String.format("./temp/subtitles/subs-%d-org.srt", counter), String.format("./temp/subbed/video-%d-sub.mp4", counter));
+                    content.append(String.format("file video-%d-sub.mp4\n", counter));
+                }
+                else if(file.getType() ==FileType.Video){
+                    FFmpeg.convertToMp4(inputVideoPath, outputVideoPath);
+                    FFmpeg.burnSubtitles(outputVideoPath, String.format("./temp/subtitles/subs-%d-org.srt", counter), String.format("./temp/subbed/video-%d-sub.mp4", counter));
+                    content.append(String.format("file video-%d-sub.mp4\n", counter));
+                }
+
+                counter++;
+            }
+
+            FileWriter writer = new FileWriter("./temp/subbed/videoList.txt");
+            writer.write(content.toString());
+            writer.close();
+
+            FFmpeg.concatVideos("./temp/subbed/videoList.txt", getOutputPath().toString().replace("\\", "/") + "/output.mp4");
+
+        }catch (IOException e){
+            throw new RuntimeException("Error trying to create the video list");
+        }
+
+
+        /*
         System.out.println("cloning and converting files");
         //cloning the files
         int count = 0;
@@ -134,7 +193,7 @@ public class VideoMaker {
                 contentFiles.add(temp);
                 continue;
             }
-            FFmpeg.convertImageToVideo(file, String.format("./temp/vid-%d.mp4", count + 1));
+            FFmpeg.convertImageToVideo(file.getPath(), String.format("./temp/vid-%d.mp4", count + 1));
             MediaFile temp = new MediaFile(String.format("./temp/vid-%d.mp4", count + 1));
             temp.copyMetadata(file);
             contentFiles.add(temp);
@@ -146,6 +205,7 @@ public class VideoMaker {
         prepareVideos();
         createVideoList();
         //FileManager.deleteDirectory("./temp");
+         */
 
     }
 
@@ -192,7 +252,7 @@ public class VideoMaker {
                 FFmpeg.cropVideo(f, VIDEO_WIDTH, VIDEO_HEIGHT, "./temp/croppedVideos/" + f.getName());
                 ProgressBar.displayProgressBar(count, contentFiles.size());
                 File cropped = new File("./temp/croppedVideos/" + f.getName());
-                FFmpeg.burnSubtitles(cropped, "./temp/croppedVideos/sub-" + (count + 1) + ".srt", "./temp/finalVideos/" + f.getName());
+                FFmpeg.burnSubtitles(cropped.getPath(), "./temp/croppedVideos/sub-" + (count + 1) + ".srt", "./temp/finalVideos/" + f.getName());
                 count++;
 
             }catch (IOException e){

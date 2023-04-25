@@ -64,8 +64,8 @@ public class Unsplash extends ApiConnection{
                 writer.write(content.toString());
                 writer.close();
 
-                FFmpeg.convertImageToVideo(new File("./temp/cover/image.jpg"), "./temp/cover/vid-0.mp4");
-                FFmpeg.burnSubtitles(new File("./temp/cover/vid-0.mp4"), "./temp/cover/cover.srt", "./temp/finalVideos/vid-0.mp4");
+                //FFmpeg.convertImageToVideo(new File("./temp/cover/image.jpg"), "./temp/cover/vid-0.mp4");
+                //FFmpeg.burnSubtitles(new File("./temp/cover/vid-0.mp4"), "./temp/cover/cover.srt", "./temp/finalVideos/vid-0.mp4");
             }catch (IOException ioe){
                 System.out.println(ioe);
             }

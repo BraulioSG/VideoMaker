@@ -28,15 +28,16 @@ public class FFmpeg extends Interpreter{
 
     /**
      * Converts an image into a video using ffmpeg
-     * @param image image to convert
+     * @param imagePath image to convert
      * @param destination destination file
      */
-    public static void convertImageToVideo(File image, String destination){
-        String filePath  = String.format("%s", image.getPath());
+    public static void convertImageToVideo(String imagePath, String destination){
         //System.out.println(getExecutable());
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v", "error", "-loop", "1","-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-t", "5", "-pix_fmt", "yuv420p", "-sn", destination, "-y");
+        //String[] commandResponse = Terminal.execute(getExecutable(),"-v", "error", "-loop", "1","-i", filePath.replace("\\", "/"), "-c:v", "libx264", "-t", "5", "-pix_fmt", "yuv420p", "-sn", destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
+
+        String[] commandResponse = Terminal.execute(getExecutable(), "-v", "error", "-loop", "1", "-i", imagePath, "-t", "5", "-filter:v", "crop=1080:1920", destination, "-y");
         for(String line: commandResponse){
             System.out.println(line);
         }
@@ -49,9 +50,8 @@ public class FFmpeg extends Interpreter{
      * @param file file to convert
      * @param destination destination
      */
-    public static void convertToMp4(File file, String destination){
-        String filePath  = String.format("%s", file.getAbsolutePath());
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-codec", "copy", destination, "-y");
+    public static void convertToMp4(String inputVideo, String destination){
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", inputVideo, "-filter:v", "crop=1080:1920", destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
         for(String line: commandResponse){
@@ -86,9 +86,8 @@ public class FFmpeg extends Interpreter{
         //System.out.println("done");
     }
 
-    public static void burnSubtitles(File file, String subtitles, String destination){
-        String filePath  = String.format("%s", file.getAbsolutePath());
-        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-vf", String.format("subtitles=%s", subtitles),destination, "-y");
+    public static void burnSubtitles(String videoInput, String subtitles, String destination){
+        String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", videoInput, "-vf", String.format("subtitles=%s", subtitles),destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
         for(String line: commandResponse){

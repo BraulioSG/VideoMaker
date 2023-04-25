@@ -47,7 +47,7 @@ public class FileManager {
             return true;
 
         }catch (IOException ioe){
-            System.out.println(ioe.getMessage());
+            //System.out.println(ioe.getMessage());
             return false;
         }
     }
