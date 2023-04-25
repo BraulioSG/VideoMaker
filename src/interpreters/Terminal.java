@@ -13,10 +13,10 @@ public class Terminal {
     public static String[] execute(String... command){
         ProcessBuilder processBuilder = new ProcessBuilder();
         Vector<String> response = new Vector<>();
-
+        /*
         for(String cmd: command){
             System.out.print(cmd + " ");
-        }
+        }*/
         System.out.println();
 
         try{
@@ -30,7 +30,8 @@ public class Terminal {
 
 
             while ((line = errorBufferReader.readLine()) != null) {
-                //System.out.println(line);
+                if(command[0] == "curl") continue;
+                System.out.println(line);
             }
 
 

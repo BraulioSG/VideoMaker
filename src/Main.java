@@ -14,8 +14,8 @@ import java.util.HashMap;
 public class Main {
     public static void main(String[] args) {
         //TestJsonParser();
-        //TestVideoMaker();
-        testUnsplash();
+        TestVideoMaker();
+        //testUnsplash();
         //TestNinjaApi();
         //testExif();
         //testFFmpeg();
@@ -28,7 +28,10 @@ public class Main {
             Terminal.execute("ffmpeg", "-loop", "1", "-i", "./samples/imagen" + i + ".jpg", "-c:v", "libx264", "-t", "8", "-pix_fmt", "yuv420p", "-sn", "./temp/vid-" + i + ".mp4", "-y");
         }
         */
-        FFmpeg.convertImageToVideo(new File("./samples/imagen5.jpg"), "./samples/output.mp4");
+        FFmpeg.convertImageToVideo(new File("./samples/imagen5.jpg"), "./samples/test.mov");
+        FFmpeg.convertToMp4(new File("./samples/test.mov"), "./samples/test2.mp4");
+        FFmpeg.cropVideo(new File("./samples/test2.mp4"), 720, 1080, "./samples/test3.mp4");
+
     }
 
     public static void testExif(){
