@@ -135,6 +135,7 @@ public class VideoMaker {
         FileManager.createDirectory("./temp/subtitles");
         FileManager.createDirectory("./temp/subbed");
 
+        OpenWeather openWeather = new OpenWeather();
         int counter = 1;
         try {
             File list = new File("./temp/subbed/videoList.txt");
@@ -147,6 +148,13 @@ public class VideoMaker {
                 String inputVideoPath = file.getPath().replace("\\", "/");
                 System.out.println(String.format("%s : %s", inputVideoPath, outputVideoPath));
                 createSrt(String.format("./temp/subtitles/subs-%d-org.srt", counter), String.format("File no° %d", counter));
+
+                String latitude = Double.toString(file.getLocation().getLatitude());
+                String longitude = Double.toString(file.getLocation().getLongitude());
+                JsonObject weatherRes = openWeather.sendRequest(latitude, longitude);
+
+                System.out.println(weatherRes);
+
 
                 if(file.getType() == FileType.Image){
                     FFmpeg.convertImageToVideo(inputVideoPath, outputVideoPath);
