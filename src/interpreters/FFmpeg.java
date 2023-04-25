@@ -41,13 +41,13 @@ public class FFmpeg extends Interpreter{
         for(String line: commandResponse){
             System.out.println(line);
         }
-        System.out.println("done");
+        //System.out.println("done");
 
     }
 
     /**
      * Converts video to mp4
-     * @param file file to convert
+     * @param inputVideo file to convert
      * @param destination destination
      */
     public static void convertToMp4(String inputVideo, String destination){

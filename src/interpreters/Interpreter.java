@@ -10,7 +10,7 @@ public abstract class Interpreter {
      * returns the Enum of the operating System
      * @return
      */
-    protected static OperatingSystem getOperatingSystem(){
+    public static OperatingSystem getOperatingSystem(){
         String os = System.getProperty("os.name");
         if(os.startsWith("Windows")) return OperatingSystem.Windows;
         return OperatingSystem.Unix;

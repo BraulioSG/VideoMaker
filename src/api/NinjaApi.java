@@ -17,7 +17,7 @@ public class NinjaApi extends ApiConnection{
         return null;
     }
     public String getJoke(String... params) {
-        String[] response = Curl.sendRequest(RequestType.GET, getAPI_URL(), "--header", String.format("\"X-Api-Key: %s\"", getAPI_KEY()));
+        String[] response = Curl.sendRequest(RequestType.GET, getAPI_URL(), "--header", "\"X-Api-Key:", String.format("%s\"", getAPI_KEY()));
         StringBuilder responseSB = new StringBuilder();
         for(String line : response){
             responseSB.append(line);

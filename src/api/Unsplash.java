@@ -37,18 +37,12 @@ public class Unsplash extends ApiConnection{
             responseSB.append(line);
         }
 
-        System.out.println(responseSB);
         Pattern pattern = Pattern.compile("\"regular\":\"([^\"]+)\"");
         Matcher matcher = pattern.matcher(responseSB.toString());
 
         if(matcher.find()){
-            System.out.println("\n");
             String imageLink = matcher.group(1);
-            System.out.println(imageLink);
-
-            FileManager.createDirectory("./temp/cover");
             Curl.sendRequest(RequestType.GET, imageLink, "--output", "./temp/cover/image.jpg");
-            System.out.println("\n");
         }
 
 
