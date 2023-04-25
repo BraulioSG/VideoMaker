@@ -32,7 +32,7 @@ public class JsonParser {
         }
         JsonDictionary dict = new JsonDictionary();
 
-        System.out.println(txt);
+        //System.out.println(txt);
         //Scanning
         boolean scanningKey = true;
         boolean openQuotes = false;
@@ -192,7 +192,7 @@ public class JsonParser {
             else
                 throw new IncorrectJsonFormat(String.format("The %s string cannot be converted missing opening bracket '[' ", txt));
         }
-        System.out.println(txt);
+        //System.out.println(txt);
         JsonArray arr = new JsonArray();
         JsonObject currentElement = null;
 

@@ -27,11 +27,11 @@ public class Terminal {
             BufferedReader errorBufferReader = new BufferedReader(errorStreamReader);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String line;
-            /*
+
             while ((line = errorBufferReader.readLine()) != null) {
-                //System.out.println(line);
+                System.out.println(line);
             }
-            */
+
 
 
             while((line = bufferedReader.readLine()) != null){

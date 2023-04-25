@@ -18,9 +18,9 @@ public class FFmpeg extends Interpreter{
             return String.format("\"%s\"", executable.getAbsolutePath());
         }else{
             pathBuilder.append(UNIX_TOOLS_PATH);
-            pathBuilder.append("/ffmpeg");
+            pathBuilder.append("/ffmpeg/ffmpeg");
             File executable = new File(pathBuilder.toString());
-            return "ffmpeg";
+            return String.format("%s", executable.getAbsolutePath());
         }
 
 
@@ -50,7 +50,7 @@ public class FFmpeg extends Interpreter{
      * @param destination destination
      */
     public static void convertToMp4(File file, String destination){
-        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String filePath  = String.format("%s", file.getAbsolutePath());
         String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-codec", "copy", destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
@@ -76,7 +76,7 @@ public class FFmpeg extends Interpreter{
     }
 
     public static void cropVideo(File file, int width, int height, String destination){
-        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String filePath  = String.format("%s", file.getAbsolutePath());
         String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-filter:v",String.format("\"crop=%d:%d:0:0\"", width, height), destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");
@@ -87,7 +87,7 @@ public class FFmpeg extends Interpreter{
     }
 
     public static void burnSubtitles(File file, String subtitles, String destination){
-        String filePath  = String.format("\"%s\"", file.getAbsolutePath());
+        String filePath  = String.format("%s", file.getAbsolutePath());
         String[] commandResponse = Terminal.execute(getExecutable(),"-v","error", "-i", filePath.replace("\\", "/"), "-vf", String.format("subtitles=%s", subtitles),destination, "-y");
         //System.out.println(getExecutable());
         //String[] commandResponse = Terminal.execute(getExecutable(), "-h");

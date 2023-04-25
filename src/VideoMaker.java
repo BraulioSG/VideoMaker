@@ -168,8 +168,8 @@ public class VideoMaker {
             ApiConnection map = new MapQuest();
             JsonObject mapResponse = map.sendRequest(lat, lon);
 
-            System.out.println("Weather -> " + weatherResponse);
-            System.out.println("Map -> " + mapResponse);
+            //System.out.println("Weather -> " + weatherResponse);
+            //System.out.println("Map -> " + mapResponse);
 
             String weatherStr = ((JsonString) weatherResponse.get("weather").get(0).get("description")).getValue();
             String city = ((JsonString) mapResponse.get("results").get(0).get("locations").get(0).get("adminArea5")).getValue();
